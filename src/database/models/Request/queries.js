@@ -5,7 +5,7 @@ export async function findRequestsByUser(userId) {
 	return await Request.find({ fromOwner: userId });
 }
 
-export async function finRequestById(id) {
+export async function findRequestById(id) {
 	return await Request.find({ _id: id });
 }
 
@@ -46,50 +46,23 @@ export async function saveRequest(userId, body) {
 	return request;
 }
 
-export async function updateRequest(requestId, body) {
-	const {
-		isFragile,
-		width,
-		height,
-		depth,
-		weight,
-		due,
-		fromCity,
-		fromAddress,
-		toCity,
-		toAddress,
-		toOwner,
-		toOwnerId,
-	} = body;
-
-	const payload = {
-		isFragile,
-		width,
-		height,
-		depth,
-		weight,
-		due,
-		fromCity,
-		fromAddress,
-		toCity,
-		toAddress,
-		toOwner,
-		toOwnerId,
+export async function updateRequest(body) {
+	const filter = { _id: body.id };
+	const update = {
+		isFragile: body.isFragile,
+		width: body.width,
+		height: body.height,
+		depth: body.depth,
+		weight: body.weight,
+		due: body.due,
+		fromCity: body.fromCity,
+		fromAddress: body.fromAddress,
+		toCity: body.toCity,
+		toAddress: body.toAddress,
+		toOwner: body.toOwner,
+		toOwnerId: body.toOwnerId,
 	};
-
-	const request = this.finRequestById(requestId);
-	request.isFragile = payload.isFragile;
-	request.width = payload.width;
-	request.height = payload.height;
-	request.depth = payload.depth;
-	request.weight = payload.weight;
-	request.due = payload.due;
-	request.fromCity = payload.fromCity;
-	request.toCity = payload.toCity;
-	request.toAddress = payload.toAddress;
-	request.toOwner = payload.toOwner;
-	request.toOwnerId = payload.toOwnerId;
-
-	await request.save();
-	return request;
+	return Request.findOneAndUpdate(filter, update, {
+		new: true,
+	});
 }

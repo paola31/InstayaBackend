@@ -1,6 +1,7 @@
 import express from 'express';
 import {
 	findRequestsByUser,
+	findRequestById,
 	saveRequest,
 	updateRequest,
 } from '@models/Request/queries';
@@ -45,11 +46,10 @@ router.post(
 	'/update',
 	hasSession,
 	validate(newRequestSchema),
-	async ({ requestId, body }, res) => {
+	async ({ body }, res) => {
 		try {
-			const payload = await updateRequest(requestId, body);
-
-			res.status(200).json({ payload, message: 'Request updated!' });
+			const updatedRequest = await updateRequest(body);
+			res.status(200).json({ updatedRequest, message: 'Request updated!' });
 		} catch (error) {
 			// eslint-disable-next-line no-console
 			console.error(error);
